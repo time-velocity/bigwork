@@ -1,0 +1,654 @@
+  [1m[36m (140.6ms)[0m  [1mDROP DATABASE IF EXISTS "housepricing_test"[0m
+  [1m[35m (412.0ms)[0m  CREATE DATABASE "housepricing_test" ENCODING = 'unicode'
+  [1m[36mSQL (1.0ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (10.6ms)[0m  CREATE TABLE "buses" ("id" serial primary key, "name" character varying, "latitude" float, "longitude" float, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (2.5ms)[0m  [1mCREATE  INDEX  "index_buses_on_latitude" ON "buses" USING btree ("latitude")[0m
+  [1m[35m (1.4ms)[0m  CREATE  INDEX  "index_buses_on_longitude" ON "buses" USING btree ("longitude")
+  [1m[36m (1.5ms)[0m  [1mCREATE  INDEX  "index_buses_on_name" ON "buses" USING btree ("name")[0m
+  [1m[35m (2.5ms)[0m  CREATE TABLE "buses_houses" ("id" serial primary key, "bus_id" integer, "house_id" integer, "distance" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (2.6ms)[0m  [1mCREATE TABLE "history_prices" ("id" serial primary key, "date" date, "price" integer, "house_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (3.2ms)[0m  CREATE TABLE "hospitals" ("id" serial primary key, "name" character varying, "latitude" float, "longitude" float, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (1.1ms)[0m  [1mCREATE  INDEX  "index_hospitals_on_latitude" ON "hospitals" USING btree ("latitude")[0m
+  [1m[35m (1.1ms)[0m  CREATE  INDEX  "index_hospitals_on_longitude" ON "hospitals" USING btree ("longitude")
+  [1m[36m (1.1ms)[0m  [1mCREATE  INDEX  "index_hospitals_on_name" ON "hospitals" USING btree ("name")[0m
+  [1m[35m (1.9ms)[0m  CREATE TABLE "hospitals_houses" ("id" serial primary key, "hospital_id" integer, "house_id" integer, "distance" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (3.2ms)[0m  [1mCREATE TABLE "houses" ("id" serial primary key, "url" character varying, "floor" character varying, "build_time" integer, "community" character varying, "room_shape" character varying, "latitude" float, "longitude" float, "street" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "local" character varying, "roughcast" boolean, "area" character varying, "average_price" character varying) [0m
+  [1m[35m (3.3ms)[0m  CREATE TABLE "schools" ("id" serial primary key, "name" character varying, "latitude" float, "longitude" float, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (1.2ms)[0m  [1mCREATE  INDEX  "index_schools_on_latitude" ON "schools" USING btree ("latitude")[0m
+  [1m[35m (0.8ms)[0m  CREATE  INDEX  "index_schools_on_longitude" ON "schools" USING btree ("longitude")
+  [1m[36m (1.0ms)[0m  [1mCREATE  INDEX  "index_schools_on_name" ON "schools" USING btree ("name")[0m
+  [1m[35m (2.1ms)[0m  CREATE TABLE "schools_houses" ("id" serial primary key, "school_id" integer, "house_id" integer, "distance" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (2.8ms)[0m  [1mCREATE TABLE "shops" ("id" serial primary key, "name" character varying, "latitude" float, "longitude" float, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (1.2ms)[0m  CREATE  INDEX  "index_shops_on_latitude" ON "shops" USING btree ("latitude")
+  [1m[36m (1.1ms)[0m  [1mCREATE  INDEX  "index_shops_on_longitude" ON "shops" USING btree ("longitude")[0m
+  [1m[35m (1.2ms)[0m  CREATE  INDEX  "index_shops_on_name" ON "shops" USING btree ("name")
+  [1m[36m (2.4ms)[0m  [1mCREATE TABLE "shops_houses" ("id" serial primary key, "shop_id" integer, "house_id" integer, "distance" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (4.1ms)[0m  CREATE TABLE "subways" ("id" serial primary key, "name" character varying, "latitude" float, "longitude" float, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (1.2ms)[0m  [1mCREATE  INDEX  "index_subways_on_latitude" ON "subways" USING btree ("latitude")[0m
+  [1m[35m (1.1ms)[0m  CREATE  INDEX  "index_subways_on_longitude" ON "subways" USING btree ("longitude")
+  [1m[36m (1.3ms)[0m  [1mCREATE  INDEX  "index_subways_on_name" ON "subways" USING btree ("name")[0m
+  [1m[35m (2.8ms)[0m  CREATE TABLE "subways_houses" ("id" serial primary key, "subway_id" integer, "house_id" integer, "distance" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (3.1ms)[0m  [1mCREATE TABLE "users" ("id" serial primary key, "name" character varying, "email" character varying, "password_digest" character varying, "admin" boolean DEFAULT 'f', "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "activation_digest" character varying, "activated" boolean, "activated_at" timestamp, "remember_digest" character varying) [0m
+  [1m[35m (1.2ms)[0m  CREATE UNIQUE INDEX  "index_users_on_email" ON "users" USING btree ("email")
+  [1m[36m (2.9ms)[0m  [1mCREATE TABLE "works" ("id" serial primary key, "name" character varying, "latitude" float, "longitude" float, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (1.2ms)[0m  CREATE  INDEX  "index_works_on_latitude" ON "works" USING btree ("latitude")
+  [1m[36m (1.1ms)[0m  [1mCREATE  INDEX  "index_works_on_longitude" ON "works" USING btree ("longitude")[0m
+  [1m[35m (1.3ms)[0m  CREATE  INDEX  "index_works_on_name" ON "works" USING btree ("name")
+  [1m[36m (2.1ms)[0m  [1mCREATE TABLE "works_houses" ("id" serial primary key, "work_id" integer, "house_id" integer, "distance" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (3.3ms)[0m  ALTER TABLE "history_prices" ADD CONSTRAINT "fk_rails_ba36efd942"
+FOREIGN KEY ("house_id")
+  REFERENCES "houses" ("id")
+
+  [1m[36m (1.8ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL) [0m
+  [1m[35m (1.3ms)[0m  CREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")
+  [1m[36m (0.3ms)[0m  [1mSELECT version FROM "schema_migrations"[0m
+  [1m[35m (0.9ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20180107125730')
+  [1m[36m (0.6ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20180107060249')[0m
+  [1m[35m (0.5ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160924022324')
+  [1m[36m (0.6ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20180107125147')[0m
+  [1m[35m (0.7ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160925100247')
+  [1m[36m (0.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20180105105446')[0m
+  [1m[35m (0.6ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20161027095326')
+  [1m[36m (0.8ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20180107070301')[0m
+  [1m[35m (0.8ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160925100448')
+  [1m[36m (0.8ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160924020858')[0m
+  [1m[35m (0.8ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160917162742')
+  [1m[36m (0.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160925100148')[0m
+  [1m[35m (0.4ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160924020921')
+  [1m[36m (0.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160924020912')[0m
+  [1m[35m (0.7ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160925050610')
+  [1m[36m (0.8ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160925100423')[0m
+  [1m[35m (0.7ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160925100356')
+  [1m[36m (0.8ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160924020844')[0m
+  [1m[35m (0.8ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160924020929')
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.4ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.5ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:23:45', '2018-01-08 03:23:45', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:23:45', '2018-01-08 03:23:45', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "schools"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:23:45', '2018-01-08 03:23:45', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:23:45', '2018-01-08 03:23:45', 298486374)[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:23:45', '2018-01-08 03:23:45', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:23:45', '2018-01-08 03:23:45', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (2.6ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:25:17', '2018-01-08 03:25:17', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:25:17', '2018-01-08 03:25:17', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (1.1ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "schools"[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:25:17', '2018-01-08 03:25:17', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:25:17', '2018-01-08 03:25:17', 298486374)[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (3.0ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:35:57', '2018-01-08 03:35:57', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 03:35:57', '2018-01-08 03:35:57', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (3.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (4.6ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (3.1ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (1.3ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:33:40', '2018-01-08 05:33:40', 980190962)[0m
+  [1m[35mFixture Insert (0.3ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:33:40', '2018-01-08 05:33:40', 298486374)
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (1.0ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36m (0.9ms)[0m  [1mALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "schools"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:33:40', '2018-01-08 05:33:40', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:33:40', '2018-01-08 05:33:40', 298486374)[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:33:41', '2018-01-08 05:33:41', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:33:41', '2018-01-08 05:33:41', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.6ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.5ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:34:05', '2018-01-08 05:34:05', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:34:05', '2018-01-08 05:34:05', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "schools"[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:34:05', '2018-01-08 05:34:05', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:34:05', '2018-01-08 05:34:05', 298486374)[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.8ms)[0m  [1mALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (2.7ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:35:10', '2018-01-08 05:35:10', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:35:10', '2018-01-08 05:35:10', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (2.6ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:36:25', '2018-01-08 05:36:25', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:36:25', '2018-01-08 05:36:25', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.2ms)[0m  ALTER TABLE "buses" DISABLE TRIGGER ALL;ALTER TABLE "buses_houses" DISABLE TRIGGER ALL;ALTER TABLE "hospitals" DISABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" DISABLE TRIGGER ALL;ALTER TABLE "schools" DISABLE TRIGGER ALL;ALTER TABLE "schools_houses" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "shops_houses" DISABLE TRIGGER ALL;ALTER TABLE "subways" DISABLE TRIGGER ALL;ALTER TABLE "subways_houses" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "works" DISABLE TRIGGER ALL;ALTER TABLE "works_houses" DISABLE TRIGGER ALL;ALTER TABLE "houses" DISABLE TRIGGER ALL;ALTER TABLE "history_prices" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.5ms)[0m  DELETE FROM "schools"
+  [1m[36mFixture Insert (0.5ms)[0m  [1mINSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:46:52', '2018-01-08 05:46:52', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "schools" ("created_at", "updated_at", "id") VALUES ('2018-01-08 05:46:52', '2018-01-08 05:46:52', 298486374)
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "buses" ENABLE TRIGGER ALL;ALTER TABLE "buses_houses" ENABLE TRIGGER ALL;ALTER TABLE "hospitals" ENABLE TRIGGER ALL;ALTER TABLE "hospitals_houses" ENABLE TRIGGER ALL;ALTER TABLE "schools" ENABLE TRIGGER ALL;ALTER TABLE "schools_houses" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "shops_houses" ENABLE TRIGGER ALL;ALTER TABLE "subways" ENABLE TRIGGER ALL;ALTER TABLE "subways_houses" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "works" ENABLE TRIGGER ALL;ALTER TABLE "works_houses" ENABLE TRIGGER ALL;ALTER TABLE "houses" ENABLE TRIGGER ALL;ALTER TABLE "history_prices" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (4.9ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.5ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.7ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.5ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.2ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (6.5ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$Vfmr9RA5oG3JaAeamt.RvODqWfE.I7rDGicoE67ply5oHL/s7Ib1u"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:40:22.493694"], ["updated_at", "2018-01-08 06:40:22.493694"], ["activation_digest", "$2a$04$FS1Q48m1443mUVz.gS8KqOiV8XpD2RQVAeZbXstdlOXwxqe3ELNvS"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$/ukVjSiAXTg5cCL/knqYV.sbLXm4.V0tzBpFZz5L7fUVsHAXkzbjW"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:42:29.567755"], ["updated_at", "2018-01-08 06:42:29.567755"], ["activation_digest", "$2a$04$21mp/w/dlBkD2rEcCnBhZOZR..OKBAYd.G11kSzt2HsbvUR5K0M4i"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$.Q6sZFTlztq8CmzXpX8eOO6eAWj2iNp9uxCIzfacuZo6q9vCuqNna"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:46:10.481542"], ["updated_at", "2018-01-08 06:46:10.481542"], ["activation_digest", "$2a$04$NUJotcxLl5GDoKPSWVJuTOWBFgwtqU1U8tfi3ViYWEm6BFxWM8ph6"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.7ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$FOz98AArRwIS6CJEQ6o2OOfREj5O7AKMtTh1mDIUJ0Vu0GhsA4fR."], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:47:33.737528"], ["updated_at", "2018-01-08 06:47:33.737528"], ["activation_digest", "$2a$04$UqnjvLWwzClu9NN0sWapYOSpabkh5Un97oNWZQQphzrESBryjNuoO"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$KqrDzjZU.oB40YS2//C4fetVSu71gLdGPWbiPfOiXokf911faKJau"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:50:36.929981"], ["updated_at", "2018-01-08 06:50:36.929981"], ["activation_digest", "$2a$04$nT.HYhTK0HKzOHzboeyM9.ehP2qJxOQELGiMM9TKIkQUNb81UnKy2"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (1.0ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$pOrEqeZqzXRGEIyEALncfeAOoyocTZy4uEHwHfs43AFul46qQusEy"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:50:53.576593"], ["updated_at", "2018-01-08 06:50:53.576593"], ["activation_digest", "$2a$04$Kq3ex8Es31uWbd0IwiGc9uFq/EzPaCF7uRSoGUquPle..i3TvhWqi"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$wGpfHYdczp3M4s3KD1NO1O0rHS0Q4UgsATN4213rss/Sn77iQshoe"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:51:14.360366"], ["updated_at", "2018-01-08 06:51:14.360366"], ["activation_digest", "$2a$04$mIYr4yS0mNIthFy.Pn1aJeXQOILm7JZ8nOXAgUTkZ4JDeIOG7u/Sq"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.7ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$V92UiOlYX.XtrNxIdKnLh.RGpGKDRyDSX8RM28U7fNUdfSxjlhVCW"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:52:32.603075"], ["updated_at", "2018-01-08 06:52:32.603075"], ["activation_digest", "$2a$04$PslMv99rk65AQWuqgi86VOb3UTnzqt8JgQb8xLgtn2Z8B6mCYivl2"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.7ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$UCv3o3tcBK5qYwQoNEKj3eqEw6YFH170fVORWjrIThm.HxKKrgDlO"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:53:59.002570"], ["updated_at", "2018-01-08 06:53:59.002570"], ["activation_digest", "$2a$04$DkBGChW0Otr1YOI6dAi08umUWH5iX3OtUgzwgIIXsUOpDY1pXGn4m"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Processing by SessionsController#create as HTML
+  Parameters: {"params"=>{"session"=>{"email"=>"testuset@test.com", "password"=>"[FILTERED]"}}}
+Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms)
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.6ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('testuset@test.com') LIMIT 1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "users" ("name", "password_digest", "email", "created_at", "updated_at", "activation_digest") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "testuser"], ["password_digest", "$2a$04$4NAx2hkZ8JV7deoa8kUPke3xlbiIe9zlosKqI21/mbMwtTXpNbPPC"], ["email", "testuset@test.com"], ["created_at", "2018-01-08 06:55:37.958823"], ["updated_at", "2018-01-08 06:55:37.958823"], ["activation_digest", "$2a$04$FHORzIoZvbu9RAK8lArvgu8r3lEv7l61mSvMT3.rGFTEg3IP8SWh6"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+Processing by SessionsController#create as HTML
+  Parameters: {"params"=>{"session"=>{"email"=>"xrd0312@outlook.com", "password"=>"[FILTERED]"}}}
+Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms)
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.5ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (1.6ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1[0m
+  [1m[35m (0.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER(' ') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('abcdefghi') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK

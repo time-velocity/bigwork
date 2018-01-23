@@ -1,0 +1,97 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+        <ul class="nav sidebar-nav">
+            <li class="sidebar-brand" style="margin-bottom:30px;">
+                <%= link_to "HousePricing", root_path, method: :get %>
+            </li>
+           
+             <% if current_user.nil? %>
+              <li class="sidebar-search">
+                
+                <button type="button" id="login_panel" class="btn-success btn btn-block navbar-btn">
+                  <span class="glyphicon glyphicon-log-in"></span> 登录
+                </button>
+             
+              </li>
+
+              <% else %>
+               <li class="sidebar-search" style="margin-bottom:20px;">
+                <div class="media">
+                  <div class="media-left">
+                    <%= gravatar_for current_user %>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading"><%= current_user.name %></h4>
+                    <%= link_to sessions_logout_path, method: :delete,class:"btn-success" do %>
+                    退出 <span class="	glyphicon glyphicon-off"></span>
+                    <% end %>
+                  </div>
+                </div>
+              </li>
+              
+              <% end %>
+            <%# <div class="sidebar-search">
+
+               <input class="effect-1" placeholder="搜索" />
+               <span class="focus-border"></span>
+
+              <!-- /input-group -->
+            </div> %>
+            <li class="sidebar-search" style="margin-top:30px;">
+              
+              <input class="effect-1 form-control" placeholder="搜索" />
+               
+            </li>
+            <li>
+              <%= link_to root_url, method: :get do %>
+                  <i class="fa fa-dashboard fa-fw"></i> 地图找房
+              <% end %>
+            </li>
+
+            <li><%= link_to houses_path, method: :get do %>
+                  <i class="fa fa-table fa-fw"></i> 房源列表
+              <% end %>
+            </li>
+
+            <li>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-bar-chart-o fa-fw"></i> 房价分析 <span class="fa arrow"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header"> 图分析 </li>
+                <li><%= link_to '散点图', visualisation_scatter_path, method: :get %></li>
+                <li> <%= link_to '热力图', visualisation_heatmap_path, method: :get %></li>
+                <li> <%= link_to 'Tableau', visualisation_tableau_path, method: :get %></li>
+
+              </ul>
+            </li>
+            <% if is_admin?%>
+            <li><%= link_to spiders_path, method: :get do %>
+                  <i class="fa fa-map fa-fw"></i> 管理员中心
+              <% end %>
+            </li>
+            <%end%>
+            <%# <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-fw fa-plus"></i> Dropdown <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+              <li class="dropdown-header">Dropdown heading</li>
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li><a href="#">Separated link</a></li>
+              <li><a href="#">One more separated link</a></li>
+            </ul>
+            </li> %>
+            <%# <li>
+                <a href="#"><i class="fa fa-fw fa-bank"></i> Page four</a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-fw fa-dropbox"></i> Page 5</a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-fw fa-twitter"></i> Last page</a>
+            </li> %>
+      </ul>
+  </nav>
+  
